@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import CancelIcon from "@mui/icons-material/Cancel";
+import DownloadIcon from "@mui/icons-material/Download";
 import { getMediaTypeFromSrc, showToast } from "../../lib/utils";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
@@ -122,6 +123,28 @@ const UserApproval: React.FC<UserApprovalProps> = ({
       .catch(console.log);
   };
 
+  const handleDownload = async () => {
+    if (mediaSrc) {
+      try {
+        const response = await fetch(mediaSrc);
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "invoice-image";
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Error downloading the file:", error);
+      }
+    }
+  };
+
   const renderMedia = () => {
     const style = {
       width: "100%",
@@ -133,17 +156,66 @@ const UserApproval: React.FC<UserApprovalProps> = ({
 
     switch (mediaType) {
       case "image":
-        return <img src={mediaSrc} alt="Preview" style={style} />;
+        return (
+          <Box position="relative" height={400}>
+            <img src={mediaSrc} alt="Preview" style={style} />
+            <IconButton
+              onClick={handleDownload}
+              sx={{
+                position: "absolute",
+                bottom: 8,
+                right: 8,
+                zIndex: 1,
+                backgroundColor: "rgba(255, 255, 255, 0.7)",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.9)",
+                },
+              }}
+            >
+              {/* <DialogContent sx={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+                <Button variant="contained" color="primary" onClick={handleDownload}>
+                </Button>
+                </DialogContent> */}
+              <div className="image-downlaod-icon">
+                <DownloadIcon />
+              </div>
+            </IconButton>
+          </Box>
+        );
       case "pdf":
         return (
-          <iframe
-            src={mediaSrc}
-            title="PDF Preview"
-            style={{ ...style, border: "none" }}
-          />
+          <Box height={400}>
+            <iframe
+              src={mediaSrc}
+              title="PDF Preview"
+              style={{ ...style, border: "none" }}
+            />
+            <Button
+              href={mediaSrc}
+              download={mediaSrc.substring(mediaSrc.lastIndexOf("/") + 1)}
+              variant="outlined"
+              startIcon={<DownloadIcon />}
+              sx={{ mt: 1 }}
+            >
+              Download PDF
+            </Button>
+          </Box>
         );
       case "video":
-        return <video src={mediaSrc} controls style={style} />;
+        return (
+          <Box height={400}>
+            <video src={mediaSrc} controls style={style} />
+            <Button
+              href={mediaSrc}
+              download={mediaSrc.substring(mediaSrc.lastIndexOf("/") + 1)}
+              variant="outlined"
+              startIcon={<DownloadIcon />}
+              sx={{ mt: 1 }}
+            >
+              Download Video
+            </Button>
+          </Box>
+        );
       default:
         return null;
     }
@@ -182,7 +254,7 @@ const UserApproval: React.FC<UserApprovalProps> = ({
               size={{ xs: 12, md: 6 }}
               sx={{ borderRadius: ".5rem", boxShadow: 3 }}
             >
-              <Box height={400}>{renderMedia()}</Box>
+              {renderMedia()}
             </Grid>
 
             <Grid
@@ -193,10 +265,7 @@ const UserApproval: React.FC<UserApprovalProps> = ({
                 {Object.entries(userData)
                   .filter(([key]) => !excludedUserFields.includes(key))
                   .map(([key, value]) => (
-                    <Box
-                      key={key}
-                      sx={{ flex: "1 1 calc(50% - 16px)"}}
-                    >
+                    <Box key={key} sx={{ flex: "1 1 calc(50% - 16px)", mb: 1 }}>
                       <Typography variant="body2" gutterBottom>
                         <strong style={{ textTransform: "capitalize" }}>
                           {key}:
@@ -234,7 +303,7 @@ const UserApproval: React.FC<UserApprovalProps> = ({
                     </RadioGroup>
                   </Box>
 
-                  {selectedAction === "approve" &&  (
+                  {selectedAction === "approve" && (
                     <>
                       {showApproveReasonDropdown && (
                         <>
