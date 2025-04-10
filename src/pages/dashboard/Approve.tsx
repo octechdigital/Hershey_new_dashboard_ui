@@ -5,6 +5,7 @@ import GenericAgGrid from "../../components/agGrid/GenericAgGrid";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import SectionAnim from "../../assets/lottie/SectionAnim";
+import ViewButtonRenderer from "../../components/customElements/Buttons";
 
 const approvedColumnDefs = [
   { headerName: "Name", field: "name" },
@@ -14,6 +15,13 @@ const approvedColumnDefs = [
   { headerName: "Win Amount", field: "winAmount" },
   { headerName: "Moderated By", field: "moderated_by" },
   { headerName: "Date", field: "date" },
+{
+    field: "view",
+    headerName: "View",
+    cellRenderer: (params: any) => (
+      <ViewButtonRenderer  pageType="approvePage" props={params} />
+    ),
+  },  
 ];
 
 const Approve: React.FC = () => {

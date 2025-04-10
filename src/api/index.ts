@@ -73,7 +73,7 @@ class APIS {
   }
   async getApproveData(): Promise<GetAnyDataResponse> {
     return authorisedApiCall("/admin/getApprovedUsers", {}, "GET")
-      .then(fetchHandler)
+      .then(fetchHandler) 
       .then(responseHelper)
       .catch(defaultCatch)
       .finally();

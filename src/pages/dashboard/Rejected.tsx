@@ -17,6 +17,13 @@ const campaignColumnDefs = [
   { headerName: "Reason", field: "reason" },
   { headerName: "Date", field: "date" },
   {
+      field: "view",
+      headerName: "View",
+      cellRenderer: (params: any) => (
+        <ViewButtonRenderer  pageType="approvePage" props={params} />
+      ),
+    },  
+  {
     field: "review",
     headerName: "Review",
     cellRenderer: (params: any) => (

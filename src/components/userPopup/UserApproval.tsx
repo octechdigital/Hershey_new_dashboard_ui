@@ -195,7 +195,7 @@ const UserApproval: React.FC<UserApprovalProps> = ({
                   .map(([key, value]) => (
                     <Box
                       key={key}
-                      sx={{ flex: "1 1 calc(50% - 16px)", minWidth: 200 }}
+                      sx={{ flex: "1 1 calc(50% - 16px)"}}
                     >
                       <Typography variant="body2" gutterBottom>
                         <strong style={{ textTransform: "capitalize" }}>
@@ -207,7 +207,7 @@ const UserApproval: React.FC<UserApprovalProps> = ({
                   ))}
               </Box>
 
-              {pageType === "pendingPage" && (
+              {pageType !== "approvePage" && pageType === "pendingPage" && (
                 <>
                   <Box mt={2}>
                     <Typography fontWeight="bold">Action</Typography>
@@ -234,7 +234,7 @@ const UserApproval: React.FC<UserApprovalProps> = ({
                     </RadioGroup>
                   </Box>
 
-                  {selectedAction === "approve" && (
+                  {selectedAction === "approve" &&  (
                     <>
                       {showApproveReasonDropdown && (
                         <>

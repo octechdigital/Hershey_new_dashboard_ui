@@ -6,7 +6,7 @@ const useUserInfo = () => {
 
   return {
     ...user,
-    isAdmin: user.role === "Admin",
+    // isAdmin: user.role === "Admin",
   };
 };
 
